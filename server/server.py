@@ -63,5 +63,5 @@ def verify():
 
 
 if __name__ == '__main__':
-    app.run(port=os.environ.get('APP_PORT'))
+    app.run(port=int(os.environ.get('APP_PORT', 8097)))
     reload()
