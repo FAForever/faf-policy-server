@@ -1,0 +1,21 @@
+language: python
+
+python:
+  - "3.5"
+
+sudo: required
+dist: trusty
+
+services:
+  - docker
+
+script:
+  - docker build -t faf-policy-server .
+
+after_success:
+  - export REPO=faforever/faf-policy-server
+  - if [ -n "${TRAVIS_TAG}" ]; then
+      docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}";
+      docker tag faf-policy-server ${REPO}:${TRAVIS_TAG};
+      docker push ${REPO};
+    fi

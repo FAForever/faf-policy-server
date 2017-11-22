@@ -1,0 +1,17 @@
+# User-specific stuff:
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/sonarIssues.xml
+.idea/misc.xml
+.idea/dbnavigator.xml
+
+# Sensitive or high-churn files:
+.idea/dataSources*
+.idea/dataSources.ids
+.idea/sqlDataSources.xml
+.idea/dynamic.xml
+.idea/uiDesigner.xml
+.idea/inspectionProfiles/
+
+.cache/
