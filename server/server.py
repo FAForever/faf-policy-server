@@ -18,7 +18,7 @@ def init_db():
     global db_connection
 
     db_connection = pymysql.connect(host=os.environ.get('DATABASE_HOST'),
-                                    port=os.environ.get('DATABASE_PORT'),
+                                    port=int(os.environ.get('DATABASE_PORT')),
                                     user=os.environ.get('DATABASE_USER'),
                                     password=os.environ.get('DATABASE_PASSWORD'),
                                     db=os.environ.get('DATABASE_NAME'),
@@ -45,11 +45,14 @@ def reload():
     global verifier_module
 
     if verifier_module is None:
-        verifier_module = importlib.import_module('verifier.verifier')
-        verifier_class = getattr(verifier_module, 'Verifier')
-        verifier = verifier_class(db_connection.cursor)
+        try:
+            verifier_module = importlib.import_module('verifier.verifier')
+            verifier_class = getattr(verifier_module, 'Verifier')
+            verifier = verifier_class(db_connection.cursor)
+        except ImportError:
+            return "Module not available"
     else:
-        importlib.reload(verifier_module, )
+        importlib.reload(verifier_module)
 
     return "Reloaded"
 
@@ -62,6 +65,8 @@ def verify():
     return jsonify(verifier.verify(request.json))
 
 
+init_db()
+reload()
+
 if __name__ == '__main__':
     app.run(port=int(os.environ.get('APP_PORT', 8097)))
-    reload()

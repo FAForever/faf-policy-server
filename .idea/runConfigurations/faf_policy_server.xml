@@ -1,0 +1,28 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="faf-policy-server" type="PythonConfigurationType" factoryName="Python" singleton="true">
+    <option name="INTERPRETER_OPTIONS" value="" />
+    <option name="PARENT_ENVS" value="true" />
+    <envs>
+      <env name="FLASK_DEBUG" value="1" />
+      <env name="PYTHONUNBUFFERED" value="1" />
+      <env name="DATABASE_NAME" value="faf" />
+      <env name="DATABASE_HOST" value="localhost" />
+      <env name="DATABASE_PORT" value="3306" />
+      <env name="APP_PORT" value="8097" />
+      <env name="DATABASE_USER" value="root" />
+      <env name="DATABASE_PASSWORD" value="banana" />
+    </envs>
+    <option name="SDK_HOME" value="C:\Users\Downlord\py3.5\Scripts\python.exe" />
+    <option name="WORKING_DIRECTORY" value="" />
+    <option name="IS_MODULE_SDK" value="false" />
+    <option name="ADD_CONTENT_ROOTS" value="true" />
+    <option name="ADD_SOURCE_ROOTS" value="true" />
+    <module name="faf-policy-server" />
+    <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/server/server.py" />
+    <option name="PARAMETERS" value="" />
+    <option name="SHOW_COMMAND_LINE" value="false" />
+    <option name="EMULATE_TERMINAL" value="false" />
+    <method />
+  </configuration>
+</component>
