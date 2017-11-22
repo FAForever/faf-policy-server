@@ -45,7 +45,7 @@ def reload():
     global verifier_module
 
     if verifier_module is None:
-        verifier_module = importlib.import_module('faforever.verifier')
+        verifier_module = importlib.import_module('verifier.verifier')
         verifier_class = getattr(verifier_module, 'Verifier')
         verifier = verifier_class(db_connection.cursor)
     else:
