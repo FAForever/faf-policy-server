@@ -7,5 +7,5 @@ WORKDIR /app
 
 RUN pip install -r requirements.txt
 
-CMD ["sh", "-c", "flask run --port ${APP_PORT}"]
+CMD ["sh", "-c", "flask run --host=0.0.0.0 --port ${APP_PORT}"]
 EXPOSE ${APP_PORT}
