@@ -1,1 +1,1 @@
-Mount the verifier code to `faforever/verifier.py`.
+Mount the verifier code to `verifier/verifier.py`.
