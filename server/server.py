@@ -1,4 +1,5 @@
 import importlib
+import logging
 import os
 import pymysql
 
@@ -60,9 +61,13 @@ def reload():
 @app.route('/verify', methods=['POST'])
 def verify():
     if not verifier:
-        return jsonify(True)
+        logging.info("No verifier available")
+        return jsonify(dict(result='honest'))
 
-    return jsonify(verifier.verify(request.json))
+    result = jsonify(verifier.verify(request.json))
+    logging.debug("Verification result: %s", result)
+
+    return result
 
 
 init_db()
