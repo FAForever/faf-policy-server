@@ -51,6 +51,7 @@ def reload():
             verifier_class = getattr(verifier_module, 'Verifier')
             verifier = verifier_class(db_connection.cursor)
         except ImportError:
+            logging.exception("Module could not be loaded")
             return "Module not available"
     else:
         importlib.reload(verifier_module)
