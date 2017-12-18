@@ -1,4 +1,4 @@
-FROM python:3.5-alpine
+FROM python:3.5
 ENV FLASK_APP server/server.py
 ENV APP_PORT 8097
 
