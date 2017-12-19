@@ -65,7 +65,9 @@ def verify():
         logging.info("No verifier available")
         return jsonify(dict(result='honest'))
 
-    result = jsonify(verifier.verify(request.json))
+    data = request.json
+
+    result = jsonify(verifier.verify(data.get('player_id'), data.get('uid_hash'), data.get('session')))
     logging.debug("Verification result: %s", result)
 
     return result
