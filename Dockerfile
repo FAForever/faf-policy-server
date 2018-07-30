@@ -5,7 +5,8 @@ ENV APP_PORT 8097
 COPY . /app
 WORKDIR /app
 
-RUN pip install -r requirements.txt
+RUN pip install pipenv
+RUN pipenv install
 
-CMD ["sh", "-c", "flask run --host=0.0.0.0 --port ${APP_PORT}"]
+CMD ["sh", "-c", "python server/server.py"]
 EXPOSE ${APP_PORT}
