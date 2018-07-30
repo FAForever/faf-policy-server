@@ -63,15 +63,16 @@ async def verify(request):
 
     data = request.json
 
-    result = json(verifier.verify(data.get('player_id'), data.get('uid_hash'), data.get('session')))
-    logging.debug("Verification result: %s", result)
+    result = await verifier.verify(data.get('player_id'), data.get('uid_hash'), data.get('session'))
 
-    return result
+    json_result = json(result)
+    logging.debug("Verification result: %s", json_result)
 
+    return json_result
 
-reload(None)
 
 if __name__ == '__main__':
-    asyncio.get_event_loop().run_until_complete(init_db())
-    init_db()
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(reload(None))
+    loop.run_until_complete(init_db())
     app.run(port=int(os.environ.get('APP_PORT', 8097)))
