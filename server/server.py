@@ -75,4 +75,4 @@ if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     loop.run_until_complete(reload(None))
     loop.run_until_complete(init_db())
-    app.run(port=int(os.environ.get('APP_PORT', 8097)))
+    app.run(host='0.0.0.0', port=int(os.environ.get('APP_PORT', 8097)))
