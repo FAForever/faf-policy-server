@@ -12,6 +12,10 @@ aiomysql = "*"
 aiohttp = "*"
 pytest-sanic = "*"
 
+[scripts]
+
+server = "python server/server.py"
+
 [dev-packages]
 
 [requires]

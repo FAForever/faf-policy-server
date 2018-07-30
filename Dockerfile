@@ -8,5 +8,5 @@ WORKDIR /app
 RUN pip install pipenv
 RUN pipenv install
 
-CMD ["sh", "-c", "python server/server.py"]
+CMD ["sh", "-c", "pipenv run server"]
 EXPOSE ${APP_PORT}
