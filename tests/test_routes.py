@@ -1,21 +1,19 @@
 import importlib
-
-from flask import url_for
-
+import pytest
 import server
 
 
 def test_verify(client):
     importlib.reload(server)
-    response = client.get(url_for('verify'))
+    request, response = client.post(server.app.url_for('verify'))
 
-    assert response.status_code == 200
-    assert response.json == "False"
+    assert response.status == 200
+    assert response.json == {"result": "honest"}
 
 
 def test_health(client):
     importlib.reload(server)
-    response = client.get(url_for('health'))
+    request, response = client.get(server.app.url_for('health'))
 
-    assert response.status_code == 200
+    assert response.status == 200
     assert response.json == {"status": "up"}

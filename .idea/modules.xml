@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/faf-policy-server.iml" filepath="$PROJECT_DIR$/.idea/faf-policy-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../faf-uid-verifier/.idea/faf-uid-verifier.iml" filepath="$PROJECT_DIR$/../faf-uid-verifier/.idea/faf-uid-verifier.iml" />
     </modules>
   </component>
 </project>

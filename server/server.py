@@ -1,47 +1,42 @@
 import importlib
 import logging
 import os
-import pymysql
+import asyncio
+import aiomysql
 
-from flask import Flask
+from sanic import Sanic
 
-from flask import request, jsonify
+from sanic import request
+from sanic.response import json
 
-app = Flask(__name__)
+app = Sanic(__name__)
 app.config.from_object(__name__)
 
 verifier = None
 verifier_module = None
-db_connection = None
+db_pool = None
 
 
-def init_db():
-    global db_connection
+async def init_db():
+    global db_pool
 
-    db_connection = pymysql.connect(host=os.environ.get('DATABASE_HOST'),
-                                    port=int(os.environ.get('DATABASE_PORT')),
-                                    user=os.environ.get('DATABASE_USER'),
-                                    password=os.environ.get('DATABASE_PASSWORD'),
-                                    db=os.environ.get('DATABASE_NAME'),
-                                    cursorclass=pymysql.cursors.DictCursor)
-
-    def get_cursor(cursor=None):
-        """
-        Ping the connection every time we get a cursor, will reconnect if the connection is dead.
-        """
-        db_connection.ping()
-        return pymysql.connections.Connection.cursor(db_connection, cursor)
-
-    db_connection.cursor = get_cursor
+    db_pool = await aiomysql.create_pool(minsize=1,
+                                         maxsize=5,
+                                         host=os.environ.get('DATABASE_HOST', "localhost"),
+                                         port=int(os.environ.get('DATABASE_PORT', 3306)),
+                                         user=os.environ.get('DATABASE_USER'),
+                                         password=os.environ.get('DATABASE_PASSWORD'),
+                                         db=os.environ.get('DATABASE_NAME'),
+                                         cursorclass=aiomysql.cursors.DictCursor)
 
 
 @app.route('/health')
-def health():
-    return jsonify({'status': 'up'})
+async def health(request):
+    return json({'status': 'up'})
 
 
 @app.route('/reload')
-def reload():
+async def reload(request):
     global verifier
     global verifier_module
 
@@ -49,7 +44,8 @@ def reload():
         try:
             verifier_module = importlib.import_module('verifier.verifier')
             verifier_class = getattr(verifier_module, 'Verifier')
-            verifier = verifier_class(db_connection)
+            async with db_pool.acquire() as connection:
+                verifier = verifier_class(connection)
         except ImportError:
             logging.exception("Module could not be loaded")
             return "Module not available"
@@ -60,21 +56,22 @@ def reload():
 
 
 @app.route('/verify', methods=['POST'])
-def verify():
+async def verify(request):
     if not verifier:
         logging.info("No verifier available")
-        return jsonify(dict(result='honest'))
+        return json(dict(result='honest'))
 
     data = request.json
 
-    result = jsonify(verifier.verify(data.get('player_id'), data.get('uid_hash'), data.get('session')))
+    result = json(verifier.verify(data.get('player_id'), data.get('uid_hash'), data.get('session')))
     logging.debug("Verification result: %s", result)
 
     return result
 
 
-init_db()
-reload()
+reload(None)
 
 if __name__ == '__main__':
+    asyncio.get_event_loop().run_until_complete(init_db())
+    init_db()
     app.run(port=int(os.environ.get('APP_PORT', 8097)))

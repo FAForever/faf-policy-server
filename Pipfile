@@ -5,11 +5,12 @@ name = "pypi"
 
 [packages]
 pytest = "*"
-pytest-flask = "*"
 rsa = "*"
 pycryptodome = "*"
-Flask = "*"
-PyMySQL = "*"
+sanic = "*"
+aiomysql = "*"
+aiohttp = "*"
+pytest-sanic = "*"
 
 [dev-packages]
 
