@@ -42,6 +42,7 @@ async def reload(request):
 
     if verifier_module is None:
         try:
+            await init_db()
             verifier_module = importlib.import_module('verifier.verifier')
             verifier_class = getattr(verifier_module, 'Verifier')
             async with db_pool.acquire() as connection:
@@ -74,5 +75,4 @@ async def verify(request):
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     loop.run_until_complete(reload(None))
-    loop.run_until_complete(init_db())
     app.run(host='0.0.0.0', port=int(os.environ.get('APP_PORT', 8097)))
