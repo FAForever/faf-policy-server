@@ -6,6 +6,7 @@ import os
 import aiomysql
 from sanic import Sanic
 from sanic.response import json
+from sanic.response import text
 
 app = Sanic(__name__)
 app.config.from_object(__name__)
@@ -51,7 +52,7 @@ async def reload(request):
     else:
         importlib.reload(verifier_module)
 
-    return "Reloaded"
+    return text("Reloaded")
 
 
 @app.route('/verify', methods=['POST'])
