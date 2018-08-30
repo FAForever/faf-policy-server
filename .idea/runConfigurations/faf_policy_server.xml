@@ -1,28 +1,32 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="faf-policy-server" type="PythonConfigurationType" factoryName="Python" singleton="true">
+    <module name="faf-policy-server" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
-      <env name="FLASK_DEBUG" value="1" />
       <env name="PYTHONUNBUFFERED" value="1" />
+      <env name="FLASK_DEBUG" value="1" />
       <env name="DATABASE_NAME" value="faf" />
       <env name="DATABASE_HOST" value="localhost" />
       <env name="DATABASE_PORT" value="3306" />
       <env name="APP_PORT" value="8097" />
       <env name="DATABASE_USER" value="root" />
       <env name="DATABASE_PASSWORD" value="banana" />
+      <env name="FAF_PRIVATE_KEY" value="MIIBOQIBAAJBALqXMig5oZNlo1zLeOFuINKnFd/79PjTto8D7/4IZUPiOD+2PyPbmO5j5sLt/5uKPfSQ9GVg7xuEuteZbRWoXKUCAwEAAQJAFsJ+kb2F4e7R4G3JTuYaBtfuqSWYmglpCUTXr0ri30axW8hGJbG9GI10WXAPs1JRKietDDvrbhlNLQPOtoECwQIhAOke8l89ytdQqlPg/OKlU4Ky4vb4cxB2ZZoeahGh793JAiEAzOcynayN0Rs9zded8TyaHlLhs8XsyqlTSUFyncu7Rf0CIDS680fnykH51Q00Dv+VNdaScBQ9DonivgimaIekgYVBAiB6N0SXi36jRO5eQsdwRkde4uzAv8N3Nfv5a9IjkItJOQIgWluLPWBOJV/GsvAXaiFdy4KMS3kWx0hsZdgCBaz9600=" />
     </envs>
-    <option name="SDK_HOME" value="C:\Users\Downlord\py3.5\Scripts\python.exe" />
+    <option name="SDK_HOME" value="" />
     <option name="WORKING_DIRECTORY" value="" />
-    <option name="IS_MODULE_SDK" value="false" />
+    <option name="IS_MODULE_SDK" value="true" />
     <option name="ADD_CONTENT_ROOTS" value="true" />
     <option name="ADD_SOURCE_ROOTS" value="true" />
-    <module name="faf-policy-server" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
     <option name="SCRIPT_NAME" value="$PROJECT_DIR$/server/server.py" />
     <option name="PARAMETERS" value="" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />
-    <method />
+    <option name="MODULE_MODE" value="false" />
+    <option name="REDIRECT_INPUT" value="false" />
+    <option name="INPUT_FILE" value="" />
+    <method v="2" />
   </configuration>
 </component>
