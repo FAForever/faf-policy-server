@@ -1,12 +1,10 @@
+import asyncio
 import importlib
 import logging
 import os
-import asyncio
+
 import aiomysql
-
 from sanic import Sanic
-
-from sanic import request
 from sanic.response import json
 
 app = Sanic(__name__)
@@ -27,6 +25,7 @@ async def init_db():
                                          user=os.environ.get('DATABASE_USER'),
                                          password=os.environ.get('DATABASE_PASSWORD'),
                                          db=os.environ.get('DATABASE_NAME'),
+                                         loop=loop,
                                          cursorclass=aiomysql.cursors.DictCursor)
 
 
@@ -45,8 +44,7 @@ async def reload(request):
             await init_db()
             verifier_module = importlib.import_module('verifier.verifier')
             verifier_class = getattr(verifier_module, 'Verifier')
-            async with db_pool.acquire() as connection:
-                verifier = verifier_class(connection)
+            verifier = verifier_class(db_pool)
         except ImportError:
             logging.exception("Module could not be loaded")
             return "Module not available"
@@ -75,4 +73,10 @@ async def verify(request):
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     loop.run_until_complete(reload(None))
-    app.run(host='0.0.0.0', port=int(os.environ.get('APP_PORT', 8097)))
+    server = app.create_server(host='0.0.0.0', port=int(os.environ.get('APP_PORT', 8097)))
+    asyncio.ensure_future(server)
+
+    try:
+        loop.run_forever()
+    except:
+        loop.stop()
