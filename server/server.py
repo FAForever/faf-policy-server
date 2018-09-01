@@ -2,6 +2,7 @@ import asyncio
 import importlib
 import logging
 import os
+import sys
 
 import aiomysql
 from sanic import Sanic
@@ -14,6 +15,12 @@ app.config.from_object(__name__)
 verifier = None
 verifier_module = None
 db_pool = None
+
+log = logging.getLogger('policy-server')
+log.setLevel(logging.DEBUG)
+stdout_handler = logging.StreamHandler(stream=sys.stdout)
+stdout_handler.setFormatter(logging.Formatter('%(levelname)-8s %(name)-30s %(message)s'))
+log.addHandler(stdout_handler)
 
 
 async def init_db():
@@ -47,7 +54,7 @@ async def reload(request):
             verifier_class = getattr(verifier_module, 'Verifier')
             verifier = verifier_class(db_pool)
         except ImportError:
-            logging.exception("Module could not be loaded")
+            log.exception("Module could not be loaded")
             return "Module not available"
     else:
         importlib.reload(verifier_module)
@@ -58,17 +65,15 @@ async def reload(request):
 @app.route('/verify', methods=['POST'])
 async def verify(request):
     if not verifier:
-        logging.info("No verifier available")
+        log.info("No verifier available")
         return json(dict(result='honest'))
 
     data = request.json
 
     result = await verifier.verify(data.get('player_id'), data.get('uid_hash'), data.get('session'))
 
-    json_result = json(result)
-    logging.debug("Verification result: %s", json_result)
-
-    return json_result
+    log.debug("Verification result: %s", result)
+    return json(result)
 
 
 if __name__ == '__main__':
