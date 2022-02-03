@@ -4,19 +4,19 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pytest = "*"
 rsa = "*"
 pycryptodome = "*"
 sanic = "*"
 aiomysql = "*"
 aiohttp = "*"
-pytest-sanic = "*"
 
 [scripts]
-
 server = "python server/server.py"
 
 [dev-packages]
+pytest = "*"
+pytest-sanic = "*"
+sanic-testing = "*"
 
 [requires]
 python_version = "3.7"

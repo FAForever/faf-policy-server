@@ -9,8 +9,7 @@ from sanic import Sanic
 from sanic.response import json
 from sanic.response import text
 
-app = Sanic(__name__)
-app.config.from_object(__name__)
+app = Sanic("policy-server")
 
 verifier = None
 verifier_module = None
@@ -33,7 +32,7 @@ async def init_db():
                                          user=os.environ.get('DATABASE_USER'),
                                          password=os.environ.get('DATABASE_PASSWORD'),
                                          db=os.environ.get('DATABASE_NAME'),
-                                         loop=loop,
+                                         loop=asyncio.get_event_loop(),
                                          cursorclass=aiomysql.cursors.DictCursor)
 
 
@@ -77,12 +76,4 @@ async def verify(request):
 
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(reload(None))
-    server = app.create_server(host='0.0.0.0', port=int(os.environ.get('APP_PORT', 8097)))
-    asyncio.ensure_future(server)
-
-    try:
-        loop.run_forever()
-    except:
-        loop.stop()
+    server = app.run(host='0.0.0.0', port=int(os.environ.get('APP_PORT', 8097)))
