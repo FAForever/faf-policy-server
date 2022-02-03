@@ -1,4 +1,4 @@
-FROM python:3.7
+FROM python:3.10
 ENV FLASK_APP server/server.py
 ENV APP_PORT 8097
 
