@@ -9,8 +9,6 @@ from sanic import Sanic
 from sanic.response import json
 from sanic.response import text
 
-app = Sanic("policy-server")
-
 verifier = None
 verifier_module = None
 db_pool = None
@@ -21,9 +19,18 @@ stdout_handler = logging.StreamHandler(stream=sys.stdout)
 stdout_handler.setFormatter(logging.Formatter('%(levelname)-8s %(name)-30s %(message)s'))
 log.addHandler(stdout_handler)
 
+app = Sanic("policy-server")
+
+
+async def init_all():
+    await init_db()
+    await init_verifier()
+
 
 async def init_db():
     global db_pool
+
+    log.info("Creating database connection pool")
 
     db_pool = await aiomysql.create_pool(minsize=1,
                                          maxsize=5,
@@ -36,6 +43,25 @@ async def init_db():
                                          cursorclass=aiomysql.cursors.DictCursor)
 
 
+async def init_verifier():
+    global db_pool
+    global verifier
+    global verifier_module
+
+    if verifier_module is None:
+        log.info("Loading verifier")
+        try:
+            verifier_module = importlib.import_module('verifier.verifier')
+            verifier_class = getattr(verifier_module, 'Verifier')
+            verifier = verifier_class(db_pool)
+        except ImportError:
+            log.exception("Module could not be loaded")
+            return "Module not available"
+    else:
+        log.info("Reloading verifier")
+        importlib.reload(verifier_module)
+
+
 @app.route('/health')
 async def health(request):
     return json({'status': 'up'})
@@ -46,17 +72,7 @@ async def reload(request):
     global verifier
     global verifier_module
 
-    if verifier_module is None:
-        try:
-            await init_db()
-            verifier_module = importlib.import_module('verifier.verifier')
-            verifier_class = getattr(verifier_module, 'Verifier')
-            verifier = verifier_class(db_pool)
-        except ImportError:
-            log.exception("Module could not be loaded")
-            return "Module not available"
-    else:
-        importlib.reload(verifier_module)
+    await init_verifier()
 
     return text("Reloaded")
 
@@ -76,4 +92,5 @@ async def verify(request):
 
 
 if __name__ == '__main__':
-    server = app.run(host='0.0.0.0', port=int(os.environ.get('APP_PORT', 8097)))
+    app.add_task(init_all)
+    app.run(host='0.0.0.0', port=int(os.environ.get('APP_PORT', 8097)))
