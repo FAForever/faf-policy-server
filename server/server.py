@@ -21,8 +21,8 @@ log.addHandler(stdout_handler)
 
 app = Sanic("policy-server")
 
-
-async def init_all():
+@app.before_server_start
+async def init_all(app, loop):
     await init_db()
     await init_verifier()
 
@@ -62,9 +62,16 @@ async def init_verifier():
         importlib.reload(verifier_module)
 
 
-@app.route('/health')
-async def health(request):
+@app.route('/health/alive')
+async def health_alive(request):
     return json({'status': 'up'})
+
+@app.route('/health/ready')
+async def health_ready(request):
+    if verifier:
+        return json({'status': 'up'})
+    else:
+        return json({'status': 'down'}, status=503)
 
 
 @app.route('/reload')
@@ -92,5 +99,4 @@ async def verify(request):
 
 
 if __name__ == '__main__':
-    app.add_task(init_all)
     app.run(host='0.0.0.0', port=int(os.environ.get('APP_PORT', 8097)))
